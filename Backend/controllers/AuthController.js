@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken"); // Example of another require
 const signup = async (req, res) => {
   try {
     console.log(req.body);
-    const { email, password, cpassword } = req.body;
-    if (password === cpassword) {
-      const isUserExits = await User.findOne({ email });
+    const { username, password, confirmPassword } = req.body;
+    if (password === confirmPassword) {
+      const isUserExits = await User.findOne({ username });
       if (isUserExits) {
         return res.status(400).send({
           success: false,
@@ -13,7 +13,7 @@ const signup = async (req, res) => {
         });
       } else {
         const user = new User({
-          email,
+          username,
           password,
           role: "STD",
         });
@@ -39,8 +39,8 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password} = req.body;
-    const user = await User.findOne({ email });
+    const { username, password, isAdmin = false } = req.body;
+    const user = await User.findOne({ username, isAdmin: isAdmin });
     if (user) {
       if (user.password === password) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
@@ -49,6 +49,7 @@ const login = async (req, res) => {
           success: true,
           message: "User successfully logged in",
           token,
+          role: user.isAdmin,
         });
       } else {
         res.status(400).send({
