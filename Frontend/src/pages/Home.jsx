@@ -36,6 +36,7 @@ const Home = () => {
       })
       .catch(() => {
         setTodos([]);
+        notify("error", "Failed to load todos");
       });
   }, []);
 
