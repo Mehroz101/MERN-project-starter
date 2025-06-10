@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import  { lazy } from "react";
 export const Navbar = lazy(() => import("../components/Navbar"));
 export const Login = lazy(() => import("../pages/Login"));
 export const Signup = lazy(() => import("../pages/Signup"));

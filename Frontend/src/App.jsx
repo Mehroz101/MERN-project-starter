@@ -5,13 +5,13 @@ import {
   Layout,
   Login,
   ProtectedRoute,
-  Setting,
   Signup,
-  Users,
 } from "./utils/LazyLoadComponent";
 import { Suspense } from "react";
 import { ROUTES } from "./utils/routes";
 import { ErrorBoundary } from "react-error-boundary";
+import PropTypes from "prop-types";
+
 function Fallback({ error }) {
   const regex = /\((.*?):\d+:\d+\)/;
   const match = error.stack.match(regex);
@@ -46,6 +46,10 @@ function Fallback({ error }) {
     </div>
   );
 }
+
+Fallback.propTypes = {
+  error: PropTypes.object.isRequired,
+};
 function App() {
   return (
     <Router>
@@ -62,10 +66,15 @@ function AppRoutes() {
     <Routes>
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.SIGNUP} element={<Signup />} />
-      <Route path="/" element={<ProtectedRoute element={<Layout />} />}>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Home />} />
-        <Route path={ROUTES.USERS} element={<Users />} />
-        <Route path={ROUTES.SETTING} element={<Setting />} />
       </Route>
     </Routes>
   );
